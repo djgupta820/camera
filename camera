@@ -16,25 +16,7 @@ class camera:
 		self.root['bg'] = '#454545'
 		self.root.title("Camera")
 		self.root.bind('<Key>', self.keyPress)
-		
-		#########################################################################################################################################
-		#-------------  Create Menu bar  ------------------#											#
-		#self.menubar = Menu(self.root)														#
-		#self.root.config(menu=self.menubar)													#
-		#																	#
-		#----------  Create Menu Options  --------------------#											#
-		#self.home_menu = Menu(self.menubar, tearoff=0)												#
-		#self.about_menu = Menu(self.menubar, tearoff=0)											#
-		#																	#
-		#----------------- Add Menu Options -----------------#											#
-		#self.menubar.add_cascade(label='Home', menu=self.home_menu)										#
-		#self.menubar.add_cascade(label='About', menu=self.about_menu)										#
-		#																	#
-		#------------------ Add Menu sub Options  ------------#											#
-		#self.home_menu.add_cascade(label='Configure storage', command=lambda:msg.showwarning('storage configuration','storage configured'))	#
-		#self.about_menu.add_cascade(label='This Project')											#
-		#########################################################################################################################################
-				
+						
 		#for camera frame
 		self.cam_frame = LabelFrame(self.root, bd=3, bg='#999999')
 		self.cam_frame.pack(fill='both', expand=True, pady=10)
