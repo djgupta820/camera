@@ -1,0 +1,91 @@
+#!/bin/python3
+
+from tkinter import *
+from PIL import Image, ImageTk
+import cv2
+import time
+import sys
+from tkinter import messagebox as msg
+
+class camera:
+	def __init__(self):
+		
+		self.img_name = ''
+		self.root = Tk()
+		self.root.geometry('900x630+200+0')
+		self.root['bg'] = '#454545'
+		self.root.title("Camera")
+		self.root.bind('<Key>', self.keyPress)
+		
+		#########################################################################################################################################
+		#-------------  Create Menu bar  ------------------#											#
+		#self.menubar = Menu(self.root)														#
+		#self.root.config(menu=self.menubar)													#
+		#																	#
+		#----------  Create Menu Options  --------------------#											#
+		#self.home_menu = Menu(self.menubar, tearoff=0)												#
+		#self.about_menu = Menu(self.menubar, tearoff=0)											#
+		#																	#
+		#----------------- Add Menu Options -----------------#											#
+		#self.menubar.add_cascade(label='Home', menu=self.home_menu)										#
+		#self.menubar.add_cascade(label='About', menu=self.about_menu)										#
+		#																	#
+		#------------------ Add Menu sub Options  ------------#											#
+		#self.home_menu.add_cascade(label='Configure storage', command=lambda:msg.showwarning('storage configuration','storage configured'))	#
+		#self.about_menu.add_cascade(label='This Project')											#
+		#########################################################################################################################################
+				
+		#for camera frame
+		self.cam_frame = LabelFrame(self.root, bd=3, bg='#999999')
+		self.cam_frame.pack(fill='both', expand=True, pady=10)
+		
+		self.cam_lbl = Label(self.cam_frame)
+		self.cam_lbl.pack(padx=20, pady=10)
+		
+		self.cap = cv2.VideoCapture(0)
+		self.show_frame()
+		
+		self.btn_click = Button(self.cam_frame, text="Capture", command=self.click, bg='#454545', activebackground='#00FF00', foreground='GREY', activeforeground='WHITE')
+		self.btn_click.pack(padx=20, pady=5)
+				
+		self.lbl_info = Label(self.cam_frame)
+				
+		self.btn_exit = Button(self.root, text='Exit', command=self.Exit, bd=1, activebackground='RED', activeforeground='WHITE').pack(pady=20)
+		self.root.mainloop()
+		
+	def show_frame(self):
+		img = cv2.cvtColor(self.cap.read()[1], cv2.COLOR_BGR2RGB)
+		img1 = Image.fromarray(img)
+		imgtk = ImageTk.PhotoImage(image=img1)
+		self.cam_lbl.imgtk = imgtk
+		self.cam_lbl.configure(image=imgtk)
+		self.cam_lbl.after(20, self.show_frame)
+		
+	def click(self):
+		if self.cap.isOpened():
+			status, frame = self.cap.read()
+			if status:
+				loc = ''
+				self.img_name = 'img_' + str(time.strftime('%Y%m%d%H%M%S')) + '.jpg'
+				cv2.imwrite(loc + self.img_name, frame)
+				self.lbl_info.pack(fill='x', expand=True, pady=5, side=BOTTOM)
+				self.lbl_info.configure(text=self.img_name+' saved successfully at /home/dj/Pictures', bg='GREEN', fg='WHITE', relief="raised", width=10)
+				self.lbl_info.after(5000, lambda:self.lbl_info.pack_forget())
+				
+		
+	def keyPress(self, event):
+		print(event.keysym)
+		if event.keysym == 'Space':
+			self.click()
+		elif event.keysym == 'Escape':
+			self.Exit()
+		else:
+			pass
+		
+	def Exit(self):
+		ans = msg.askyesno('Exit', "Sure to Exit?")
+		if ans:
+			sys.exit(0)
+		else:
+			pass
+cam = camera()
